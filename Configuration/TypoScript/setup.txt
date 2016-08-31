@@ -30,6 +30,8 @@ plugin.tx_socialstream_pi1 {
 		xingappsecret = {$plugin.tx_socialstream_pi1.settings.xingappsecret}
 		liappid = {$plugin.tx_socialstream_pi1.settings.liappid}
 		liappsecret = {$plugin.tx_socialstream_pi1.settings.liappsecret}
+		flickrappid = {$plugin.tx_socialstream_pi1.settings.flickrappid}
+		flickrappsecret = {$plugin.tx_socialstream_pi1.settings.flickrappsecret}
 	}
 }
 
@@ -96,6 +98,8 @@ module.tx_socialstream_web_socialstreambe1 {
 		xingappsecret = {$plugin.tx_socialstream_pi1.settings.xingappsecret}
 		liappid = {$plugin.tx_socialstream_pi1.settings.liappid}
 		liappsecret = {$plugin.tx_socialstream_pi1.settings.liappsecret}
+		flickrappid = {$plugin.tx_socialstream_pi1.settings.flickrappid}
+		flickrappsecret = {$plugin.tx_socialstream_pi1.settings.flickrappsecret}
 	}
 }
 

@@ -13,7 +13,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] = '
 		'Facebook' => '',
 		'Xing' => '',
 		'LinkedIn' => '',
-		
+		'Flickr' => '',
 	),
 	// non-cacheable actions
 	array(
@@ -21,5 +21,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] = '
 		'Facebook' => '',
 		'Xing' => '',
 		'LinkedIn' => '',
+		'Flickr' => '',
 	)
 );

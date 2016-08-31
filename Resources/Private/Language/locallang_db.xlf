@@ -120,6 +120,15 @@
 			<trans-unit id="tx_socialstream_domain_model_gallery.page">
 				<source>Page</source>
 			</trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_gallery.gallery_url">
+                <target>Gallery Link</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_gallery.title">
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_gallery.description">
+                <target>Description</target>
+            </trans-unit>
 			<trans-unit id="tx_socialstream_domain_model_event">
                 <source>Event</source>
             </trans-unit>

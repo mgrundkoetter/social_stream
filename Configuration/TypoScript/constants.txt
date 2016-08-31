@@ -51,6 +51,10 @@ plugin.tx_socialstream_pi1 {
 		liappid =
 		# cat=social_stream_keys/keys/l; type=string; label= LinkedIn App Secret
 		liappsecret =
+		# cat=social_stream_keys/keys/k; type=string; label= Flickr Consumer Key
+		flickrappid =
+		# cat=social_stream_keys/keys/l; type=string; label= Flickr Consumer Secret
+		flickrappsecret =
 	}
 }
 

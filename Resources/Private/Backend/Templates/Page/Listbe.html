@@ -31,6 +31,7 @@ Otherwise your changes will be overwritten the next time you save the extension 
 			<option value="4">Twitter</option>
 			<option value="{f:uri.action(action: 'token', controller: 'Xing')}">Xing</option>
 			<option value="{f:uri.action(action: 'token', controller: 'LinkedIn')}">LinkedIn</option>
+			<option value="{f:uri.action(action: 'token', controller: 'Flickr')}">Flickr</option>
 		</select><br/>
 		<label for="name">
 			<f:translate key="tx_socialstream_domain_model_page.id" /> / <f:translate key="tx_socialstream_domain_model_page.name" />
@@ -50,7 +51,7 @@ Otherwise your changes will be overwritten the next time you save the extension 
 
 	<b><f:translate key="tx_socialstream_domain_model_page.name" /></b><br/>
 	<f:for each="{pages}" as="page">
-		<f:link.action action="showbe" arguments="{page : page}"><f:if condition='{page.streamtype}==1'>Facebook</f:if><f:if condition='{page.streamtype}==2'>Instagram</f:if><f:if condition='{page.streamtype}==3'>YouTube</f:if><f:if condition='{page.streamtype}==4'>Twitter</f:if><f:if condition='{page.streamtype}==5'>Xing</f:if><f:if condition='{page.streamtype}==6'>LinkedIn</f:if>: {page.name}</f:link.action><br/>
+		<f:link.action action="showbe" arguments="{page : page}"><f:if condition='{page.streamtype}==1'>Facebook</f:if><f:if condition='{page.streamtype}==2'>Instagram</f:if><f:if condition='{page.streamtype}==3'>YouTube</f:if><f:if condition='{page.streamtype}==4'>Twitter</f:if><f:if condition='{page.streamtype}==5'>Xing</f:if><f:if condition='{page.streamtype}==6'>LinkedIn</f:if><f:if condition='{page.streamtype}==7'>Flickr</f:if>: {page.name}</f:link.action><br/>
 	</f:for>
 
 </f:section>

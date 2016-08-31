@@ -23,10 +23,10 @@ return array(
 		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('social_stream') . 'Resources/Public/Icons/tx_socialstream_domain_model_gallery.gif'
 	),
 	'interface' => array(
-		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, id, picture_url, picture, created_time, page',
+		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, id, title, description, gallery_url, picture_url, picture, created_time, page',
 	),
 	'types' => array(
-		'1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, id, picture_url, picture, created_time, page, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'),
+		'1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, id, title, description, gallery_url, picture_url, picture, created_time, page, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'),
 	),
 	'palettes' => array(
 		'1' => array('showitem' => ''),
@@ -216,6 +216,37 @@ return array(
 				'readOnly' => 1,
 			),
 		),
-		
+		'title' => array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:social_stream/Resources/Private/Language/locallang_db.xlf:tx_socialstream_domain_model_gallery.title',
+			'config' => array(
+				'type' => 'text',
+				'cols' => 40,
+				'rows' => 15,
+				'readOnly' => 1,
+				'eval' => 'trim'
+			)
+		),
+		'description' => array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:social_stream/Resources/Private/Language/locallang_db.xlf:tx_socialstream_domain_model_gallery.description',
+			'config' => array(
+				'type' => 'text',
+				'cols' => 40,
+				'rows' => 15,
+				'readOnly' => 1,
+				'eval' => 'trim'
+			)
+		),
+		'gallery_url' => array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:social_stream/Resources/Private/Language/locallang_db.xlf:tx_socialstream_domain_model_gallery.gallery_url',
+			'config' => array(
+				'type' => 'input',
+				'size' => 30,
+				'readOnly' => 1,
+				'eval' => 'trim'
+			),
+		),
 	),
 );

@@ -78,6 +78,8 @@ class PageController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     protected $xingappsecret = "";
     protected $liappid = "";
     protected $liappsecret = "";
+    protected $flickrappid = "";
+    protected $flickrappsecret = "";
     
     protected $limitPosts = "";
     protected $limitGalleries = "";
@@ -113,6 +115,8 @@ class PageController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         $this->xingappsecret = $this->settings['xingappsecret'];
         $this->liappid = $this->settings['liappid'];
         $this->liappsecret = $this->settings['liappsecret'];
+        $this->flickrappid = $this->settings['flickrappidappid'];
+        $this->flickrappidappsecret = $this->settings['flickrappidappsecret'];
         
         $this->limitPosts = $this->settings['limitPosts'];
         $this->limitGalleries = $this->settings['limitGalleries'];
@@ -197,16 +201,7 @@ class PageController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     {
         $pages = $this->pageRepository->findAll();
         $this->view->assign('pages', $pages);
-
-        if($this->fbappid && $this->fbappsecret){
-            $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( 'TYPO3\CMS\Extbase\Object\ObjectManager' );
-            $uriBuilder = $objectManager->get( 'TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder' );
-            $uriBuilder->initializeObject();
-
-            $fburl = "https://www.facebook.com/v2.4/dialog/oauth?client_id=".$this->fbappid."&state=".$this->fbappsecret."&response_type=token&scope=user_posts&sdk=php-sdk-5.0.0&redirect_uri=";
-            $this->view->assign('fburl', $fburl);
-        }
-    }    
+    }
     
     /**
      * action show

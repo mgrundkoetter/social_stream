@@ -46,6 +46,27 @@ class Gallery extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @var string
      */
     protected $pictureUrl = '';
+
+    /**
+     * galleryUrl
+     *
+     * @var string
+     */
+    protected $galleryUrl = '';
+
+    /**
+     * title
+     *
+     * @var string
+     */
+    protected $title = '';
+
+    /**
+     * description
+     *
+     * @var string
+     */
+    protected $description = '';
     
     /**
      * picture
@@ -173,4 +194,51 @@ class Gallery extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $this->page = $page;
     }
 
+    /**
+     * @return string
+     */
+    public function getGalleryUrl()
+    {
+        return $this->galleryUrl;
+    }
+
+    /**
+     * @param string $galleryUrl
+     */
+    public function setGalleryUrl($galleryUrl)
+    {
+        $this->galleryUrl = $galleryUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
 }

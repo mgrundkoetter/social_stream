@@ -102,5 +102,8 @@ class GetSocialCommandController extends \TYPO3\CMS\Extbase\Mvc\Controller\Comma
         $liController = new \Socialstream\SocialStream\Controller\LinkedInController();
         $liController->rootPage = $rootPage;
         $liController->getLinkedInAction();
+        $flickrController = new \Socialstream\SocialStream\Controller\FlickrController();
+        $flickrController->rootPage = $rootPage;
+        $flickrController->getFlickrAction();
     }
 }

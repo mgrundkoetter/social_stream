@@ -24,6 +24,7 @@ if (TYPO3_MODE === 'BE') {
 			'Facebook' => 'token, create',
 			'Xing' => 'token, create',
 			'LinkedIn' => 'token, create',
+			'Flickr' => 'token, create',
 		),
 		array(
 			'access' => 'user,group',

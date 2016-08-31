@@ -3,7 +3,7 @@
 		<div class="tx-social-stream-element">
 
 			<b>{page.name}</b><br/>
-			<f:image src="{page.picture.originalResource.publicUrl}" title="{f:if(condition:'{page.picture.originalResource.title}',then:'{page.picture.originalResource.title}',else:'{page.name}')}" alt="{f:if(condition:'{page.picture.originalResource.alternative}',then:'{page.picture.originalResource.alternative}',else:'{page.name}')}" width="{maxWidth}" height="{maxHeight}c"/>
+			<f:image src="{page.picture.uid}" treatIdAsReference="true" title="{f:if(condition:'{page.picture.originalResource.title}',then:'{page.picture.originalResource.title}',else:'{page.name}')}" alt="{f:if(condition:'{page.picture.originalResource.alternative}',then:'{page.picture.originalResource.alternative}',else:'{page.name}')}" width="{maxWidth}" height="{maxHeight}c"/>
 			<p>{page.about}</p>
 
 		</div>
