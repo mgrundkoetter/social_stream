@@ -151,6 +151,7 @@ class FlickrController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
             $page->setStreamtype(7);
             $page->setToken($tk);
             $page->setTokensecret($tokenArray['oauth_token_secret']);
+
             $this->forward('create', null, null, array('page' => $page, 'short' => 1, 'close' => 1));
 
         } else {
@@ -281,6 +282,9 @@ class FlickrController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         }
         if (empty($keyPart2)) {
             $keyPart2 = $_COOKIE["secret"];
+            if (isset($_COOKIE['secret'])) {
+                unset($_COOKIE['secret']);
+            }
         }
         if (empty($keyPart2)) {
             $keyPart2 = '';

@@ -148,6 +148,7 @@ return array(
 					array('Twitter', 4),
 					array('Xing', 5),
 					array('LinkedIn', 6),
+					array('Flickr', 7),
 				),
 				'size' => 1,
 				'maxitems' => 1,
