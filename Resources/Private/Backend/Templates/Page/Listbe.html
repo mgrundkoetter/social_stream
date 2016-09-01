@@ -27,7 +27,7 @@ Otherwise your changes will be overwritten the next time you save the extension 
 		<select name="streamtype" onchange="document.getElementById('token-create-form').action = this.value;console.log(this.value)">
 			<option value="{f:uri.action(action: 'token', controller: 'Facebook')}">Facebook</option>
 			<option value="2">Instagram</option>
-			<option value="3">YouTube</option>
+			<option value="{f:uri.action(action: 'token', controller: 'Youtube')}">YouTube</option>
 			<option value="4">Twitter</option>
 			<option value="{f:uri.action(action: 'token', controller: 'Xing')}">Xing</option>
 			<option value="{f:uri.action(action: 'token', controller: 'LinkedIn')}">LinkedIn</option>

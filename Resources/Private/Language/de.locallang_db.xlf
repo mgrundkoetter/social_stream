@@ -177,6 +177,30 @@
             <trans-unit id="tx_socialstream_domain_model_event.page">
                 <target>Social Stream Seite</target>
             </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video">
+                <target>Gallerie-Bild</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.id">
+                <target>Id</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.picture_url">
+                <target>Bild Url</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.picture">
+                <target>Bild</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.created_time">
+                <target>Zeit</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.page">
+                <target>Social Stream Seite</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.title">
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.description">
+                <target>Beschreibung</target>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

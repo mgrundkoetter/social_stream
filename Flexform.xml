@@ -39,6 +39,14 @@
                                         <numIndex index="0">LLL:EXT:social_stream/Resources/Private/Language/locallang.xlf:flex.view7</numIndex>
                                         <numIndex index="1">7</numIndex>
                                     </numIndex>
+                                    <numIndex index="8" type="array">
+                                        <numIndex index="0">LLL:EXT:social_stream/Resources/Private/Language/locallang.xlf:flex.view8</numIndex>
+                                        <numIndex index="1">8</numIndex>
+                                    </numIndex>
+                                    <numIndex index="9" type="array">
+                                        <numIndex index="0">LLL:EXT:social_stream/Resources/Private/Language/locallang.xlf:flex.view9</numIndex>
+                                        <numIndex index="1">9</numIndex>
+                                    </numIndex>
                                 </items>
                                 <minitems>1</minitems>
                                 <maxitems>1</maxitems>

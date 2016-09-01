@@ -1,0 +1,55 @@
+
+<f:layout name="Default" />
+
+This Template is responsible for displaying a single view for a domain object
+
+If you modify this template, do not forget to change the overwrite settings
+in /Configuration/ExtensionBuilder/settings.yaml:
+  Resources:
+    Private:
+      Templates:
+        Show.html: keep
+
+Otherwise your changes will be overwritten the next time you save the extension in the extension builder
+
+<f:section name="main">
+  <article class="tx-social-stream-singleElement">
+
+
+    <h3>{video.title}</h3>
+    <p>{video.description}</p>
+    <br />
+    <iframe src="https://www.youtube.com/embed/{video.id}" width="600" height="480"></iframe>
+
+
+
+    <b>Link: </b><a href="https://www.youtube.com/watch?v={video.id}" target="_blank" title="<f:translate key='labels.open' />">{video.title}</a>
+    <br/>
+    <br/>
+    <f:if condition="{nextprev}">
+      <f:then>
+        <f:link.page pageUid="{backpage}">&lt;- <f:translate key="labels.overview" /></f:link.page>
+      </f:then>
+      <f:else>
+        <a href=" javascript: history.go(-1); " rel="nofollow">&lt;- <f:translate key="labels.back" /></a>
+      </f:else>
+    </f:if>
+
+    <f:if condition="{nextprev}">
+      <br/><br/><br/><br/>
+      <div class="tx-social-stream-nextprev">
+        <f:if condition="{prev}">
+          <div class="tx-social-stream-prev">
+            <f:render partial="Page/NextPrev" arguments="{video:prev,showvideo:showvideo,prev:1}" />
+          </div>
+        </f:if>
+        <f:if condition="{next}">
+          <div class="tx-social-stream-next">
+            <f:render partial="Page/NextPrev" arguments="{video:next,showvideo:showvideo,next:1}" />
+          </div>
+        </f:if>
+      </div>
+    </f:if>
+
+  </article>
+</f:section>

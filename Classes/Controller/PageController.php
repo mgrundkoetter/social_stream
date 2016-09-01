@@ -66,6 +66,14 @@ class PageController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     protected $eventRepository = NULL;
 
+    /**
+     * videoRepository
+     *
+     * @var \Socialstream\SocialStream\Domain\Repository\VideoRepository
+     * @inject
+     */
+    protected $videoRepository = NULL;
+
     protected $fbappid = "";
     protected $fbappsecret = "";
     protected $instaappid = "";
@@ -170,6 +178,10 @@ class PageController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
             $posts = $this->eventRepository->getByPages($pageIds,(integer)$this->maxcount);
             $this->view->assign('posts', $posts);
         }
+        if($this->viewType == 8) {
+            $posts = $this->videoRepository->getByPages($pageIds,(integer)$this->maxcount);
+            $this->view->assign('posts', $posts);
+        }
         if($this->viewType == 2 || $this->viewType == 4 || $this->viewType == 6) {
             $pages = array();
             foreach ($pageIds as $key => $pageId) {
@@ -251,6 +263,26 @@ class PageController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         $this->view->assign('backpage', $this->backpage);
         $this->view->assign('nextprev', $this->nextprev);
     }
+
+    /**
+     * action showSingleVideo
+     *
+     * @param \Socialstream\SocialStream\Domain\Model\Video $video
+     * @return void
+     */
+    public function showSingleVideoAction(\Socialstream\SocialStream\Domain\Model\Video $video)
+    {
+        if($this->nextprev){
+            $prev = $this->videoRepository->getPrev($video->getPage(),$video->getCreatedTime()->setTimeZone(new \DateTimeZone('UTC'))->format("Y-m-d H:i:s"));
+            $next = $this->videoRepository->getNext($video->getPage(),$video->getCreatedTime()->setTimeZone(new \DateTimeZone('UTC'))->format("Y-m-d H:i:s"));
+            $this->view->assign('prev', $prev);
+            $this->view->assign('next', $next);
+        }
+        $this->view->assign('video', $video);
+        $this->view->assign('backpage', $this->backpage);
+        $this->view->assign('nextprev', $this->nextprev);
+    }
+
 
     /**
      * action showbe

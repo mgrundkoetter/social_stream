@@ -120,6 +120,15 @@
 			<trans-unit id="tx_socialstream_domain_model_gallery.page">
 				<source>Page</source>
 			</trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_gallery.gallery_url">
+                <target>Gallery Link</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_gallery.title">
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_gallery.description">
+                <target>Description</target>
+            </trans-unit>
 			<trans-unit id="tx_socialstream_domain_model_event">
                 <source>Event</source>
             </trans-unit>
@@ -168,6 +177,30 @@
             <trans-unit id="tx_socialstream_domain_model_event.page">
                 <source>Page</source>
             </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video">
+                <source>Video</source>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.id">
+                <source>Id</source>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.picture_url">
+                <source>Picture Url</source>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.picture">
+                <source>Picture</source>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.created_time">
+                <source>Created Time</source>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.page">
+                <source>Page</source>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.title">
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.description">
+                <target>Description</target>
+            </trans-unit>
 			<trans-unit id="flex.view">
 				<source>View</source>
 			</trans-unit>
@@ -192,6 +225,12 @@
 			<trans-unit id="flex.view7">
 				<source>Detail View</source>
 			</trans-unit>
+            <trans-unit id="flex.view8">
+                <source>Mixed Video View</source>
+            </trans-unit>
+            <trans-unit id="flex.view9">
+                <source>Video Overview</source>
+            </trans-unit>
 			<trans-unit id="flex.pages">
 				<source>Social Stream Pages</source>
 			</trans-unit>

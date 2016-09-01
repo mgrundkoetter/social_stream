@@ -1,0 +1,7 @@
+<div class="tx-social-stream-element">
+	<f:link.action action="showSingleVideo" arguments="{video:post}">
+		<h3>{post.title}</h3>
+		<p>{post.description}</p>
+		<f:image src="{post.picture.uid}" treatIdAsReference="true" title="{f:if(condition:'{post.picture.originalResource.title}',then:'{post.picture.originalResource.title}',else:'{post.name}')}" alt="{f:if(condition:'{post.picture.originalResource.alternative}',then:'{post.picture.originalResource.alternative}',else:'{post.name}')}" width="300" height="200c"/>
+	</f:link.action>
+</div>

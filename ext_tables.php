@@ -25,6 +25,7 @@ if (TYPO3_MODE === 'BE') {
 			'Xing' => 'token, create',
 			'LinkedIn' => 'token, create',
 			'Flickr' => 'token, create',
+			'Youtube' => 'token, create',
 		),
 		array(
 			'access' => 'user,group',
@@ -48,5 +49,8 @@ $TCA['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_socialstream_domain_model_gallery', 'EXT:social_stream/Resources/Private/Language/locallang_csh_tx_socialstream_domain_model_gallery.xlf');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_socialstream_domain_model_gallery');
+
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_socialstream_domain_model_video', 'EXT:social_stream/Resources/Private/Language/locallang_csh_tx_socialstream_domain_model_video.xlf');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_socialstream_domain_model_video');
 
 

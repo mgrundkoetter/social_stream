@@ -24,6 +24,7 @@ plugin.tx_socialstream_pi1 {
 		instaappsecret = {$plugin.tx_socialstream_pi1.settings.instaappsecret}
 		ytappid = {$plugin.tx_socialstream_pi1.settings.ytappid}
 		ytappsecret = {$plugin.tx_socialstream_pi1.settings.ytappsecret}
+		ytappredirect = {$plugin.tx_socialstream_pi1.settings.ytappredirect}
 		twappid = {$plugin.tx_socialstream_pi1.settings.twappid}
 		twappsecret = {$plugin.tx_socialstream_pi1.settings.twappsecret}
 		xingappid = {$plugin.tx_socialstream_pi1.settings.xingappid}
@@ -92,6 +93,7 @@ module.tx_socialstream_web_socialstreambe1 {
 		instaappsecret = {$plugin.tx_socialstream_pi1.settings.instaappsecret}
 		ytappid = {$plugin.tx_socialstream_pi1.settings.ytappid}
 		ytappsecret = {$plugin.tx_socialstream_pi1.settings.ytappsecret}
+		ytappredirect = {$plugin.tx_socialstream_pi1.settings.ytappredirect}
 		twappid = {$plugin.tx_socialstream_pi1.settings.twappid}
 		twappsecret = {$plugin.tx_socialstream_pi1.settings.twappsecret}
 		xingappid = {$plugin.tx_socialstream_pi1.settings.xingappid}

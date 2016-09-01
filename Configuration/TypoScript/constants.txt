@@ -39,6 +39,8 @@ plugin.tx_socialstream_pi1 {
 		ytappid =
 		# cat=social_stream_keys/keys/f; type=string; label= YouTube App Secret
 		ytappsecret =
+		# cat=social_stream_keys/keys/f; type=string; label= YouTube App Base URL
+		ytappredirect =
 		# cat=social_stream_keys/keys/g; type=string; label= Twitter App ID
 		twappid =
 		# cat=social_stream_keys/keys/h; type=string; label= Twitter App Secret

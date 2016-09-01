@@ -120,6 +120,15 @@
 			<trans-unit id="tx_socialstream_domain_model_gallery.page">
 				<target>Social Stream Seite</target>
 			</trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_gallery.gallery_url">
+                <target>Url zur Galerie</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_gallery.title">
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_gallery.description">
+                <target>Beschreibung</target>
+            </trans-unit>
 			<trans-unit id="tx_socialstream_domain_model_event">
                 <target>Veranstaltung</target>
             </trans-unit>
@@ -167,6 +176,30 @@
             </trans-unit>
             <trans-unit id="tx_socialstream_domain_model_event.page">
                 <target>Social Stream Seite</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video">
+                <target>Gallerie-Bild</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.id">
+                <target>Id</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.picture_url">
+                <target>Bild Url</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.picture">
+                <target>Bild</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.created_time">
+                <target>Zeit</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.page">
+                <target>Social Stream Seite</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.title">
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="tx_socialstream_domain_model_video.description">
+                <target>Beschreibung</target>
             </trans-unit>
 			<trans-unit id="flex.view">
 				<target>Ansicht</target>

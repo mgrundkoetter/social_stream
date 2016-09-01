@@ -9,11 +9,12 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] = '
 	'Socialstream.' . $_EXTKEY,
 	'Pi1',
 	array(
-		'Page' => 'list, show, message, showSinglePost, showSingleEvent',
+		'Page' => 'list, show, message, showSinglePost, showSingleEvent, showSingleVideo',
 		'Facebook' => '',
 		'Xing' => '',
 		'LinkedIn' => '',
 		'Flickr' => '',
+		'Youtube' => '',
 	),
 	// non-cacheable actions
 	array(
@@ -22,5 +23,6 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] = '
 		'Xing' => '',
 		'LinkedIn' => '',
 		'Flickr' => '',
+		'Youtube' => '',
 	)
 );
