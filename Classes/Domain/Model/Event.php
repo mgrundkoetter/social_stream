@@ -135,7 +135,7 @@ class Event extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * page
      *
-     * @var \Facebookstream\FacebookStream\Domain\Model\Page
+     * @var \Socialstream\SocialStream\Domain\Model\Page
      */
     protected $page = null;
 

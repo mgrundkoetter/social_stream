@@ -861,8 +861,8 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
 
             if(!$eventFolder->hasFile($bildname) && $bildname) {
                 if ($this->exists($bildurl)) {
-                    $this->grab_image($bildurl,'/tmp/' . $bildname);
-                    $movedNewFile = $storage->addFile('/tmp/' . $bildname, $eventFolder, $bildname);
+                    $this->grab_image($bildurl,$this->tmp . $bildname);
+                    $movedNewFile = $storage->addFile($this->tmp . $bildname, $eventFolder, $bildname);
                     $bild = $movedNewFile->getUid();
                 }
                 if ($event->getPicture()) {
