@@ -244,12 +244,17 @@ class YoutubeController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
         $this->initTSFE($this->rootPage, 0);
         $this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
         $this->configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager');
-        $this->settings = $this->configurationManager->getConfiguration(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, 'Socialstream');
+        $this->configurationManager->setConfiguration(
+            array(
+                'persistence' => array('storagePid' => $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_socialstream_pi1.']['persistence.']['storagePid'])
+            )
+        );
+        $this->settings = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_socialstream_pi1.']['settings.'];
         $this->pageRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Socialstream\\SocialStream\\Domain\\Repository\\PageRepository');
         $this->videoRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Socialstream\\SocialStream\\Domain\\Repository\\VideoRepository');
         $this->initializeAction();
         $short = 0;
-        $pages = $this->pageRepository->findAll();
+        $pages = $this->pageRepository->findByStreamtype($this->streamtype);
         $clear = 0;
 
         foreach ($pages as $page) {

@@ -424,13 +424,18 @@ class FlickrController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
         $this->initTSFE($this->rootPage, 0);
         $this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
         $this->configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager');
-        $this->settings = $this->configurationManager->getConfiguration(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, 'Socialstream');
+        $this->configurationManager->setConfiguration(
+            array(
+                'persistence' => array('storagePid' => $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_socialstream_pi1.']['persistence.']['storagePid'])
+            )
+        );
+        $this->settings = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_socialstream_pi1.']['settings.'];
         $this->pageRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Socialstream\\SocialStream\\Domain\\Repository\\PageRepository');
         $this->postRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Socialstream\\SocialStream\\Domain\\Repository\\PostRepository');
         $this->galleryRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Socialstream\\SocialStream\\Domain\\Repository\\GalleryRepository');
         $this->initializeAction();
         $short = 0;
-        $pages = $this->pageRepository->findAll();
+        $pages = $this->pageRepository->findByStreamtype($this->streamtype);
         $clear = 0;
 
         foreach ($pages as $page) {

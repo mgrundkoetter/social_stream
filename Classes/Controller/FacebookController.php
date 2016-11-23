@@ -2,30 +2,31 @@
 namespace Socialstream\SocialStream\Controller;
 
 
-/***************************************************************
- *
- *  Copyright notice
- *
- *  (c) 2016
- *
- *  All rights reserved
- *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+    /***************************************************************
+     *
+     *  Copyright notice
+     *
+     *  (c) 2016
+     *
+     *  All rights reserved
+     *
+     *  This script is part of the TYPO3 project. The TYPO3 project is
+     *  free software; you can redistribute it and/or modify
+     *  it under the terms of the GNU General Public License as published by
+     *  the Free Software Foundation; either version 3 of the License, or
+     *  (at your option) any later version.
+     *
+     *  The GNU General Public License can be found at
+     *  http://www.gnu.org/copyleft/gpl.html.
+     *
+     *  This script is distributed in the hope that it will be useful,
+     *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+     *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     *  GNU General Public License for more details.
+     *
+     *  This copyright notice MUST APPEAR in all copies of the script!
+     ***************************************************************/
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 /**
  * FacebookController
@@ -73,13 +74,14 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
     protected $maxHeight = 0;
     protected $storagePid = 0;
     protected $tmp = "/tmp/";
-    protected $clearStrings = array('\ud83c\u','\ud83d\u','\u2600\u');
+    protected $clearStrings = array('\ud83c\u', '\ud83d\u', '\u2600\u');
 
     public $rootPage = 1;
-    
+
     protected $streamtype = 1;
 
-    public function initializeAction(){
+    public function initializeAction()
+    {
         $this->fbappid = $this->settings['fbappid'];
         $this->fbappsecret = $this->settings['fbappsecret'];
         $this->limitPosts = $this->settings['limitPosts'];
@@ -89,9 +91,9 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
         $this->maxHeight = $this->settings['maxHeight'];
         $this->storagePid = $this->settings['storagePid'];
         $this->tmp = $this->settings['tmp'];
-        if(substr($this->tmp, -1) != "/")$this->tmp . "/";
+        if (substr($this->tmp, -1) != "/") $this->tmp . "/";
     }
-        
+
     /**
      * action token
      *
@@ -101,17 +103,17 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
     {
         $vars = $this->request->getArguments();
         $pagename = $vars["page"]["name"];
-        if($pagename) {
+        if ($pagename) {
             if ($pagename != "me") {
-                $dbpage = $this->pageRepository->searchByName($pagename,$this->streamtype);
+                $dbpage = $this->pageRepository->searchByName($pagename, $this->streamtype);
                 if ($dbpage->toArray()) {
                     $msg = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.already', 'social_stream');
                     $head = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.error', 'social_stream');
                     $this->redirect('message', 'Page', null, array('head' => $head, 'message' => $msg));
-                }else{
-                    $headers = get_headers("https://www.facebook.com/".$pagename);
+                } else {
+                    $headers = get_headers("https://www.facebook.com/" . $pagename);
                     $resp = substr($headers[0], 9, 3);
-                    if($resp != 200 && $resp != 302 && $resp != 999){
+                    if ($resp != 200 && $resp != 302 && $resp != 999) {
                         $msg = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.nopage', 'social_stream');
                         $head = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.error', 'social_stream');
                         $this->redirect('message', 'Page', null, array('head' => $head, 'message' => $msg));
@@ -119,17 +121,17 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
                 }
             }
         }
-        
+
         $accesstoken = $_GET["access_token"];
-        if($accesstoken) {
+        if ($accesstoken) {
             $token = file_get_contents("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=" . $this->fbappid . "&client_secret=" . $this->fbappsecret . "&fb_exchange_token=" . $accesstoken);
             $infos = explode("&", $token);
             $tk = explode("=", $infos[0])[1];
             $exp = explode("=", $infos[1])[1];
             if ($_GET["pageRefresh"]) {
-                $page = $this->pageRepository->searchById($_GET["pageRefresh"],$this->streamtype);
+                $page = $this->pageRepository->searchById($_GET["pageRefresh"], $this->streamtype);
                 $page->setToken($tk);
-                $page->setExpires(time()+$exp);
+                $page->setExpires(time() + $exp);
                 $persistenceManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\PersistenceManager');
                 $persistenceManager->persistAll();
             } else {
@@ -137,28 +139,28 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
                 $page->setName($_GET["name"]);
                 $page->setStreamtype(1);
                 $page->setToken($tk);
-                $page->setExpires(time()+$exp);
+                $page->setExpires(time() + $exp);
             }
             //$this->pageRepository->add($page);
             //$persistenceManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\PersistenceManager');
             //$persistenceManager->persistAll();
             $this->forward('create', null, null, array('page' => $page, 'short' => 1, 'close' => 1));
             //$this->view->assign('close', 1);
-        }else{
-            if($_GET["name"]){
+        } else {
+            if ($_GET["name"]) {
                 $this->view->assign('name', $_GET["name"]);
-            }else if($_GET["pageRefresh"]){
+            } else if ($_GET["pageRefresh"]) {
                 $this->view->assign('pageRefresh', $_GET["pageRefresh"]);
-            }else{
+            } else {
                 $accessurl = "https://www.facebook.com/v2.4/dialog/oauth?client_id=" . $this->fbappid . "&state=" . $this->fbappsecret . "&response_type=token&scope=user_posts&sdk=php-sdk-5.0.0&redirect_uri=";
                 $this->view->assign('accessurl', $accessurl);
-                if($vars["pageRefresh"]){
+                if ($vars["pageRefresh"]) {
                     $this->view->assign('pageRefresh', $vars["pageRefresh"]);
-                }else {
+                } else {
                     $this->view->assign('name', $pagename);
                 }
             }
-        }        
+        }
     }
 
     /**
@@ -171,10 +173,10 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
      */
     public function createAction(\Socialstream\SocialStream\Domain\Model\Page $page, $short = 0, $close = 0)
     {
-        if($page->getName()){
+        if ($page->getName()) {
             $already = 0;
-            if($page->getName() != "me") {
-                $dbpage = $this->pageRepository->searchByName($page->getName(),$this->streamtype);
+            if ($page->getName() != "me") {
+                $dbpage = $this->pageRepository->searchByName($page->getName(), $this->streamtype);
                 if ($dbpage->toArray()) {
                     $already = 1;
                     $page = $dbpage[0];
@@ -184,53 +186,53 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             $storageRepository = $this->objectManager->get('TYPO3\\CMS\\Core\\Resource\\StorageRepository');
             $clear = 0;
             $storage = $storageRepository->findByUid('1');
-            if($storage->hasFolder("facebook")){
+            if ($storage->hasFolder("facebook")) {
                 $targetFolder = $storage->getFolder('facebook');
-            }else{
+            } else {
                 $targetFolder = $storage->createFolder('facebook');
             }
 
             try {
                 // ### get Page Data ###
-                $page = $this->pageProcess($page,$storage,$targetFolder,$already);
-                if($targetFolder->hasFolder($page->getId())){
+                $page = $this->pageProcess($page, $storage, $targetFolder, $already);
+                if ($targetFolder->hasFolder($page->getId())) {
                     $subFolder = $targetFolder->getSubfolder($page->getId());
-                }else{
+                } else {
                     $subFolder = $targetFolder->createFolder($page->getId());
                 }
 
                 // ### get Posts of Page ###
-                if($subFolder->hasFolder("posts")){
+                if ($subFolder->hasFolder("posts")) {
                     $postsFolder = $subFolder->getSubfolder("posts");
-                }else{
+                } else {
                     $postsFolder = $subFolder->createFolder("posts");
                 }
-                $clear += $this->postProcess($page,$storage,$targetFolder,$subFolder,$postsFolder,$short);
+                $clear += $this->postProcess($page, $storage, $targetFolder, $subFolder, $postsFolder, $short);
 
                 // ### get Gallery Page ###
-                if($subFolder->hasFolder("gallery")){
+                if ($subFolder->hasFolder("gallery")) {
                     $galleryFolder = $subFolder->getSubfolder("gallery");
-                }else{
+                } else {
                     $galleryFolder = $subFolder->createFolder("gallery");
                 }
-                $clear += $this->galleryProcess($page,$storage,$targetFolder,$subFolder,$galleryFolder,$short);
+                $clear += $this->galleryProcess($page, $storage, $targetFolder, $subFolder, $galleryFolder, $short);
 
                 // ### get Event Page ###
-                if($subFolder->hasFolder("events")){
+                if ($subFolder->hasFolder("events")) {
                     $eventFolder = $subFolder->getSubfolder("events");
-                }else{
+                } else {
                     $eventFolder = $subFolder->createFolder("events");
                 }
-                $clear += $this->eventProcess($page,$storage,$targetFolder,$subFolder,$eventFolder,$short);
+                $clear += $this->eventProcess($page, $storage, $targetFolder, $subFolder, $eventFolder, $short);
 
-                if($clear > 0){
+                if ($clear > 0) {
                     $tce = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\DataHandling\DataHandler');
                     $tce->clear_cacheCmd('cacheTag:socialStream');
                 }
 
-                if($close) {
+                if ($close) {
                     $msg = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.created', 'social_stream');
-                }else{
+                } else {
                     $msg = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.imported', 'social_stream');
                 }
                 $head = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.success', 'social_stream');
@@ -243,9 +245,9 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
                 $this->redirect('message', 'Page', null, array('head' => $head, 'message' => $msg, 'close' => $close));
             }
 
-        }else{
-            $msg = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.noname','social_stream');
-            $head = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.error','social_stream');
+        } else {
+            $msg = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.noname', 'social_stream');
+            $head = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.error', 'social_stream');
             $this->redirect('message', 'Page', null, array('head' => $head, 'message' => $msg, 'close' => $close));
         }
     }
@@ -257,10 +259,16 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
      */
     public function getFacebookAction()
     {
-        $this->initTSFE($this->rootPage,0);
+        $this->initTSFE($this->rootPage, 0);
         $this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
         $this->configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager');
-        $this->settings = $this->configurationManager->getConfiguration(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, 'Socialstream');
+        $this->configurationManager->setConfiguration(
+            array(
+                'persistence' => array('storagePid' => $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_socialstream_pi1.']['persistence.']['storagePid'])
+            )
+        );
+
+        $this->settings = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_socialstream_pi1.']['settings.'];
         $this->pageRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Socialstream\\SocialStream\\Domain\\Repository\\PageRepository');
         $this->postRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Socialstream\\SocialStream\\Domain\\Repository\\PostRepository');
         $this->galleryRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Socialstream\\SocialStream\\Domain\\Repository\\GalleryRepository');
@@ -268,105 +276,105 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
         $short = 0;
         $pages = $this->pageRepository->findByStreamtype(1);
         $clear = 0;
-
-        foreach($pages as $page){
+        foreach ($pages as $page) {
             $storageRepository = $this->objectManager->get('TYPO3\\CMS\\Core\\Resource\\StorageRepository');
             $storage = $storageRepository->findByUid('1');
-            if($storage->hasFolder("facebook")){
+            if ($storage->hasFolder("facebook")) {
                 $targetFolder = $storage->getFolder('facebook');
-            }else{
+            } else {
                 $targetFolder = $storage->createFolder('facebook');
             }
-
+            var_dump($targetFolder);
             try {
                 // ### get Page Data ###
-                $page = $this->pageProcess($page,$storage,$targetFolder,1,0);
-                if($targetFolder->hasFolder($page->getId())){
+                $page = $this->pageProcess($page, $storage, $targetFolder, 1, 0);
+                if ($targetFolder->hasFolder($page->getId())) {
                     $subFolder = $targetFolder->getSubfolder($page->getId());
-                }else{
+                } else {
                     $subFolder = $targetFolder->createFolder($page->getId());
                 }
 
                 // ### get Posts of Page ###
-                if($subFolder->hasFolder("posts")){
+                if ($subFolder->hasFolder("posts")) {
                     $postsFolder = $subFolder->getSubfolder("posts");
-                }else{
+                } else {
                     $postsFolder = $subFolder->createFolder("posts");
                 }
-                $clear += $this->postProcess($page,$storage,$targetFolder,$subFolder,$postsFolder,$short);
+                $clear += $this->postProcess($page, $storage, $targetFolder, $subFolder, $postsFolder, $short);
 
                 // ### get Gallery Page ###
-                if($subFolder->hasFolder("gallery")){
+                if ($subFolder->hasFolder("gallery")) {
                     $galleryFolder = $subFolder->getSubfolder("gallery");
-                }else{
+                } else {
                     $galleryFolder = $subFolder->createFolder("gallery");
                 }
-                $clear += $this->galleryProcess($page,$storage,$targetFolder,$subFolder,$galleryFolder,$short);
+                $clear += $this->galleryProcess($page, $storage, $targetFolder, $subFolder, $galleryFolder, $short);
 
                 // ### get Event Page ###
-                if($subFolder->hasFolder("events")){
+                if ($subFolder->hasFolder("events")) {
                     $eventFolder = $subFolder->getSubfolder("events");
-                }else{
+                } else {
                     $eventFolder = $subFolder->createFolder("events");
                 }
-                $clear += $this->eventProcess($page,$storage,$targetFolder,$subFolder,$eventFolder,$short);
+                $clear += $this->eventProcess($page, $storage, $targetFolder, $subFolder, $eventFolder, $short);
 
             } catch (\TYPO3\CMS\Core\Error\Exception $e) {
-                echo "".$e->getMessage();
+                echo "" . $e->getMessage();
             }
         }
-        
-        if($clear > 0){
+
+        if ($clear > 0) {
             $tce = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\DataHandling\DataHandler');
             $tce->clear_cacheCmd('cacheTag:socialStream');
         }
 
     }
 
-    private function pageProcess($page,$storage,$targetFolder,$already,$showerror=1){
+    private function pageProcess($page, $storage, $targetFolder, $already, $showerror = 1)
+    {
         $persistenceManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\PersistenceManager');
 
-        if(!$this->fbappid || !$this->fbappsecret){
+        if (!$this->fbappid || !$this->fbappsecret) {
             $msg = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.noapp', 'social_stream');
             $head = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.error', 'social_stream');
-            if($showerror) {
+            if ($showerror) {
                 $this->redirect('message', 'Page', null, array('head' => $head, 'message' => $msg, 'close' => 1));
-            }else{
+            } else {
                 return $page;
             }
         }
-        if(!$this->storagePid){
+        if (!$this->storagePid) {
             $msg = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.nostorage', 'social_stream');
             $head = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.error', 'social_stream');
-            if($showerror) {
+            if ($showerror) {
                 $this->redirect('message', 'Page', null, array('head' => $head, 'message' => $msg, 'close' => 1));
-            }else{
+            } else {
                 return $page;
             }
         }
 
         $tk = $page->getToken();
-        $expdiff = ($page->getExpires() - time())/86400;
-        if($expdiff > 0 && $expdiff <= 5 && $tk){
+        $expdiff = ($page->getExpires() - time()) / 86400;
+        if ($expdiff > 0 && $expdiff <= 5 && $tk) {
             $token = file_get_contents("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=" . $this->fbappid . "&client_secret=" . $this->fbappsecret . "&fb_exchange_token=" . $tk);
-            $infos = explode("&",$token);
-            $tk = explode("=",$infos[0])[1];
-            $exp = explode("=",$infos[1])[1];
+            $infos = explode("&", $token);
+            $tk = explode("=", $infos[0])[1];
+            $exp = explode("=", $infos[1])[1];
             $page->setToken($tk);
         }
-        if(!$tk){
-            $tk = $this->fbappid."|".$this->fbappsecret;
+        if (!$tk) {
+            $tk = $this->fbappid . "|" . $this->fbappsecret;
         }
-        if ($page->getName() == "me"){
+        if ($page->getName() == "me") {
             $page->setMe(1);
         }
         try {
             if ($page->getMe()) {
                 $elem = (file_get_contents("https://graph.facebook.com/me/?fields=id,name,about,link,picture,cover&access_token=$tk"));
             } else {
-                if($page->getId()) {
+                if ($page->getId()) {
                     $elem = (file_get_contents("https://graph.facebook.com/" . $page->getId() . "/?fields=id,name,about,description,link,picture,cover&access_token=$tk"));
-                }else{
+                } else {
                     $elem = (file_get_contents("https://graph.facebook.com/" . $page->getName() . "/?fields=id,name,about,description,link,picture,cover&access_token=$tk"));
                 }
             }
@@ -374,32 +382,32 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
         } catch (\TYPO3\CMS\Core\Error\Exception $e) {
             $msg = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.nodata', 'social_stream');
             $head = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.error', 'social_stream');
-            if($showerror) {
+            if ($showerror) {
                 $this->redirect('message', 'Page', null, array('head' => $head, 'message' => $msg, 'close' => 1));
-            }else{
+            } else {
                 return $page;
             }
         }
-        if(!$elem){
+        if (!$elem) {
             $msg = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.nodata', 'social_stream');
             $head = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate('msg.error', 'social_stream');
-            if($showerror) {
+            if ($showerror) {
                 $this->redirect('message', 'Page', null, array('head' => $head, 'message' => $msg, 'close' => 1));
-            }else{
+            } else {
                 return $page;
             }
         }
         foreach ($this->clearStrings as $str) {
-            while(strpos($elem, $str) !== false){
+            while (strpos($elem, $str) !== false) {
                 $pos = strpos($elem, $str);
-                $elem = substr_replace($elem,'',$pos,12);
+                $elem = substr_replace($elem, '', $pos, 12);
             }
         }
 
         $elem = json_decode($elem);
 
-        $helppage = $this->pageRepository->searchById($elem->id,$this->streamtype);
-        if($helppage){
+        $helppage = $this->pageRepository->searchById($elem->id, $this->streamtype);
+        if ($helppage) {
             $helppage->setToken($page->getToken());
             $helppage->setExpires($page->getExpires());
             $page = $helppage;
@@ -409,17 +417,17 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
 
         $page->setId($elem->id);
         $page->setName($elem->name);
-        if($elem->about)$page->setAbout($elem->about);
-        if($elem->description)$page->setDescription($elem->description);
+        if ($elem->about) $page->setAbout($elem->about);
+        if ($elem->description) $page->setDescription($elem->description);
         $page->setLink($elem->link);
         $page->setCoverUrl($elem->cover->source);
         $page->setStreamtype($this->streamtype);
 
-        if($page->getMe()){
+        if ($page->getMe()) {
             //$bildurl = $elem->picture->data->url;
             $picstream = json_decode(file_get_contents("https://graph.facebook.com/me/picture?redirect=0&width=900&access_token=$tk"));
             $bildurl = $picstream->data->url;
-        }else {
+        } else {
             if ($page->getId()) {
                 $picstream = json_decode(file_get_contents("https://graph.facebook.com/" . $page->getId() . "/photos?fields=source&access_token=$tk"));
             } else {
@@ -428,36 +436,36 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             $bildurl = $picstream->data[0]->source;
         }
 
-        $bildname = explode("?",basename($bildurl));
-        if (is_array($bildname)){
+        $bildname = explode("?", basename($bildurl));
+        if (is_array($bildname)) {
             $bildname = $bildname[0];
         }
         $page->setPictureUrl($bildurl);
 
-        if($already==1) {
+        if ($already == 1) {
             $this->pageRepository->update($page);
-        }else{
+        } else {
             $this->pageRepository->add($page);
         }
         $persistenceManager->persistAll();
 
-        if($targetFolder->hasFolder($page->getId())){
+        if ($targetFolder->hasFolder($page->getId())) {
             $subFolder = $targetFolder->getSubfolder($page->getId());
-        }else{
+        } else {
             $subFolder = $targetFolder->createFolder($page->getId());
         }
 
-        if((!$subFolder->hasFile($bildname) && $bildname) || ($storage->getFileInFolder($bildname,$subFolder)->getSize() <= 0 && $subFolder->hasFile($bildname) && $bildname)) {
+        if ((!$subFolder->hasFile($bildname) && $bildname) || ($storage->getFileInFolder($bildname, $subFolder)->getSize() <= 0 && $subFolder->hasFile($bildname) && $bildname)) {
             if ($bildurl) {
                 copy($bildurl, $this->tmp . $bildname);
-                $movedNewFile = $storage->addFile($this->tmp . $bildname, $subFolder, $bildname,  \TYPO3\CMS\Core\Resource\DuplicationBehavior::REPLACE);
+                $movedNewFile = $storage->addFile($this->tmp . $bildname, $subFolder, $bildname, \TYPO3\CMS\Core\Resource\DuplicationBehavior::REPLACE);
                 $bild = $movedNewFile->getUid();
             }
-            if($page->getPicture()){
-                $GLOBALS["TYPO3_DB"]->exec_UPDATEquery("sys_file_reference","uid=".$page->getPicture()->getUid(),array('deleted'=>'1'));
+            if ($page->getPicture()) {
+                $GLOBALS["TYPO3_DB"]->exec_UPDATEquery("sys_file_reference", "uid=" . $page->getPicture()->getUid(), array('deleted' => '1'));
             }
-        }elseif(!$page->getPicture()){
-            $bild = $storage->getFile("/".$targetFolder->getName()."/".$subFolder->getName()."/".$bildname);
+        } elseif (!$page->getPicture()) {
+            $bild = $storage->getFile("/" . $targetFolder->getName() . "/" . $subFolder->getName() . "/" . $bildname);
             $bild = $bild->getUid();
         }
 
@@ -483,22 +491,22 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
 
         $bild = NULL;
         $bildurl = $page->getCoverUrl();
-        $bildname = explode("?",basename($bildurl));
-        if (is_array($bildname)){
+        $bildname = explode("?", basename($bildurl));
+        if (is_array($bildname)) {
             $bildname = $bildname[0];
         }
 
-        if((!$subFolder->hasFile($bildname) && $bildname) || ($storage->getFileInFolder($bildname,$subFolder)->getSize() <= 0 && $subFolder->hasFile($bildname) && $bildname)) {
+        if ((!$subFolder->hasFile($bildname) && $bildname) || ($storage->getFileInFolder($bildname, $subFolder)->getSize() <= 0 && $subFolder->hasFile($bildname) && $bildname)) {
             if ($bildurl) {
                 copy($bildurl, $this->tmp . $bildname);
-                $movedNewFile = $storage->addFile($this->tmp . $bildname, $subFolder, $bildname,  \TYPO3\CMS\Core\Resource\DuplicationBehavior::REPLACE);
+                $movedNewFile = $storage->addFile($this->tmp . $bildname, $subFolder, $bildname, \TYPO3\CMS\Core\Resource\DuplicationBehavior::REPLACE);
                 $bild = $movedNewFile->getUid();
             }
-            if($page->getCover()){
-                $GLOBALS["TYPO3_DB"]->exec_UPDATEquery("sys_file_reference","uid=".$page->getCover()->getUid(),array('deleted'=>'1'));
+            if ($page->getCover()) {
+                $GLOBALS["TYPO3_DB"]->exec_UPDATEquery("sys_file_reference", "uid=" . $page->getCover()->getUid(), array('deleted' => '1'));
             }
-        }elseif(!$page->getCover()){
-            $bild = $storage->getFile("/".$targetFolder->getName()."/".$subFolder->getName()."/".$bildname);
+        } elseif (!$page->getCover()) {
+            $bild = $storage->getFile("/" . $targetFolder->getName() . "/" . $subFolder->getName() . "/" . $bildname);
             $bild = $bild->getUid();
         }
         if ($bild) {
@@ -523,24 +531,25 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
         return $page;
     }
 
-    private function postProcess($page,$storage,$targetFolder,$subFolder,$postsFolder,$short,$paging=""){
+    private function postProcess($page, $storage, $targetFolder, $subFolder, $postsFolder, $short, $paging = "")
+    {
         $persistenceManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\PersistenceManager');
         $clear = 0;
 
-        if($paging){
+        if ($paging) {
             $stream = (file_get_contents($paging));
-        }else {
+        } else {
             $tk = $page->getToken();
-            if(!$tk){
-                $tk = $this->fbappid."|".$this->fbappsecret;
+            if (!$tk) {
+                $tk = $this->fbappid . "|" . $this->fbappsecret;
             }
             if ($short) {
                 if ($page->getMe()) {
                     $stream = (file_get_contents("https://graph.facebook.com/me/feed?fields=id,created_time,link,type,message,full_picture,object_id,picture,name,caption,description,story,source&access_token=$tk&limit=$this->limitPosts"));
                 } else {
-                    if($page->getId()){
+                    if ($page->getId()) {
                         $stream = (file_get_contents("https://graph.facebook.com/" . $page->getId() . "/feed?fields=id,created_time,link,type,message,full_picture,object_id,picture,name,caption,description,story,source&access_token=$tk&limit=$this->limitPosts"));
-                    }else {
+                    } else {
                         $stream = (file_get_contents("https://graph.facebook.com/" . $page->getName() . "/feed?fields=id,created_time,link,type,message,full_picture,object_id,picture,name,caption,description,story,source&access_token=$tk&limit=$this->limitPosts"));
                     }
                 }
@@ -548,24 +557,24 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
                 if ($page->getMe()) {
                     $stream = (file_get_contents("https://graph.facebook.com/me/feed?fields=id,created_time,link,type,message,full_picture,object_id,picture,name,caption,description,story,source&access_token=$tk"));
                 } else {
-                    if($page->getId()){
+                    if ($page->getId()) {
                         $stream = (file_get_contents("https://graph.facebook.com/" . $page->getId() . "/feed?fields=id,created_time,link,type,message,full_picture,object_id,picture,name,caption,description,story,source&access_token=$tk"));
-                    }else {
+                    } else {
                         $stream = (file_get_contents("https://graph.facebook.com/" . $page->getName() . "/feed?fields=id,created_time,link,type,message,full_picture,object_id,picture,name,caption,description,story,source&access_token=$tk"));
                     }
                 }
             }
         }
         foreach ($this->clearStrings as $str) {
-            while(strpos($stream, $str) !== false){
+            while (strpos($stream, $str) !== false) {
                 $pos = strpos($stream, $str);
-                $stream = substr_replace($stream,'',$pos,12);
+                $stream = substr_replace($stream, '', $pos, 12);
             }
         }
         $stream = json_decode($stream);
 
-        foreach($stream->data as $entry) {
-            $post = $this->postRepository->findHiddenById($entry->id,$page->getUid());
+        foreach ($stream->data as $entry) {
+            $post = $this->postRepository->findHiddenById($entry->id, $page->getUid());
             if ($post->toArray()) {
                 $postalready = 1;
                 $post = $post[0];
@@ -592,27 +601,27 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             } else {
                 $post->setType(0);
             }
-            if($entry->name)$post->setName($entry->name);
-            if($entry->caption)$post->setCaption($entry->caption);
-            if($entry->description)$post->setDescription($entry->description);
-            if($entry->message) {
+            if ($entry->name) $post->setName($entry->name);
+            if ($entry->caption) $post->setCaption($entry->caption);
+            if ($entry->description) $post->setDescription($entry->description);
+            if ($entry->message) {
                 $message = str_replace("\n", "<br/>", $entry->message);
                 $post->setMessage(str_replace("<br/><br/>", "<br/>", $message));
             }
-            if($entry->story)$post->setStory($entry->story);
-            if($entry->full_picture){
+            if ($entry->story) $post->setStory($entry->story);
+            if ($entry->full_picture) {
                 $post->setPictureUrl($entry->full_picture);
-            }else{
+            } else {
                 $singlePost = json_decode(file_get_contents("https://graph.facebook.com/" . $entry->id . "/?fields=full_picture&access_token=$tk"));
-                if($singlePost->full_picture){
+                if ($singlePost->full_picture) {
                     $post->setPictureUrl($singlePost->full_picture);
                 }
             }
-            if($entry->source){
+            if ($entry->source) {
                 $post->setVideoUrl($entry->source);
-            }else{
+            } else {
                 $singlePost = json_decode(file_get_contents("https://graph.facebook.com/" . $entry->id . "/?fields=source&access_token=$tk"));
-                if($singlePost->source){
+                if ($singlePost->source) {
                     $post->setVideoUrl($singlePost->source);
                 }
             }
@@ -631,16 +640,16 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             $bildurl = $post->getPictureUrl();
             $bildname = $entry->id . ".jpg";
 
-            if((!$postsFolder->hasFile($bildname) && $bildname) || ($storage->getFileInFolder($bildname,$postsFolder)->getSize() <= 0 && $postsFolder->hasFile($bildname) && $bildname)) {
+            if ((!$postsFolder->hasFile($bildname) && $bildname) || ($storage->getFileInFolder($bildname, $postsFolder)->getSize() <= 0 && $postsFolder->hasFile($bildname) && $bildname)) {
                 if ($this->exists($bildurl)) {
-                    $this->grab_image($bildurl,$this->tmp . $bildname);
-                    $movedNewFile = $storage->addFile($this->tmp . $bildname, $postsFolder, $bildname,  \TYPO3\CMS\Core\Resource\DuplicationBehavior::REPLACE);
+                    $this->grab_image($bildurl, $this->tmp . $bildname);
+                    $movedNewFile = $storage->addFile($this->tmp . $bildname, $postsFolder, $bildname, \TYPO3\CMS\Core\Resource\DuplicationBehavior::REPLACE);
                     $bild = $movedNewFile->getUid();
                 }
                 if ($post->getPicture()) {
                     $GLOBALS["TYPO3_DB"]->exec_UPDATEquery("sys_file_reference", "uid=" . $post->getPicture()->getUid(), array('deleted' => '1'));
                 }
-            } elseif (!$post->getPicture()  && $bildname) {
+            } elseif (!$post->getPicture() && $bildname) {
                 $bild = $storage->getFile("/" . $targetFolder->getName() . "/" . $subFolder->getName() . "/" . $postsFolder->getName() . "/" . $bildname);
                 $bild = $bild->getUid();
             }
@@ -668,16 +677,16 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             $bildurl = $post->getVideoUrl();
             $bildname = $entry->id . ".mp4";
 
-            if((!$postsFolder->hasFile($bildname) && $bildname) || ($storage->getFileInFolder($bildname,$postsFolder)->getSize() <= 0 && $postsFolder->hasFile($bildname) && $bildname)) {
+            if ((!$postsFolder->hasFile($bildname) && $bildname) || ($storage->getFileInFolder($bildname, $postsFolder)->getSize() <= 0 && $postsFolder->hasFile($bildname) && $bildname)) {
                 if ($this->exists($bildurl)) {
-                    $this->grab_image($bildurl,$this->tmp . $bildname);
-                    $movedNewFile = $storage->addFile($this->tmp . $bildname, $postsFolder, $bildname,  \TYPO3\CMS\Core\Resource\DuplicationBehavior::REPLACE);
+                    $this->grab_image($bildurl, $this->tmp . $bildname);
+                    $movedNewFile = $storage->addFile($this->tmp . $bildname, $postsFolder, $bildname, \TYPO3\CMS\Core\Resource\DuplicationBehavior::REPLACE);
                     $bild = $movedNewFile->getUid();
                 }
                 if ($post->getVideo()) {
                     $GLOBALS["TYPO3_DB"]->exec_UPDATEquery("sys_file_reference", "uid=" . $post->getVideo()->getUid(), array('deleted' => '1'));
                 }
-            } elseif (!$post->getVideo()  && $bildname) {
+            } elseif (!$post->getVideo() && $bildname) {
                 $bild = $storage->getFile("/" . $targetFolder->getName() . "/" . $subFolder->getName() . "/" . $postsFolder->getName() . "/" . $bildname);
                 $bild = $bild->getUid();
             }
@@ -704,25 +713,27 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
         }
 
 
-        if($stream->paging->next && !$short){
-            $clear += $this->postProcess($page,$storage,$targetFolder,$subFolder,$postsFolder,$short,$stream->paging->next);
+        if ($stream->paging->next && !$short) {
+            $clear += $this->postProcess($page, $storage, $targetFolder, $subFolder, $postsFolder, $short, $stream->paging->next);
         }
         return $clear;
     }
-    private function galleryProcess($page,$storage,$targetFolder,$subFolder,$galleryFolder,$short,$paging=""){
+
+    private function galleryProcess($page, $storage, $targetFolder, $subFolder, $galleryFolder, $short, $paging = "")
+    {
         $persistenceManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\PersistenceManager');
 
-        if($paging){
+        if ($paging) {
             $stream = (file_get_contents($paging));
-        }else {
+        } else {
             $tk = $page->getToken();
-            if(!$tk){
-                $tk = $this->fbappid."|".$this->fbappsecret;
+            if (!$tk) {
+                $tk = $this->fbappid . "|" . $this->fbappsecret;
             }
             if ($short) {
-                if($page->getMe()){
+                if ($page->getMe()) {
                     $stream = (file_get_contents("https://graph.facebook.com/me/photos/uploaded?fields=source,created_time,id&access_token=$tk&limit=$this->limitGalleries"));
-                }else {
+                } else {
                     if ($page->getId()) {
                         $stream = (file_get_contents("https://graph.facebook.com/" . $page->getId() . "/photos/uploaded?fields=source,created_time,id&access_token=$tk&limit=$this->limitGalleries"));
                     } else {
@@ -730,9 +741,9 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
                     }
                 }
             } else {
-                if($page->getMe()){
+                if ($page->getMe()) {
                     $stream = (file_get_contents("https://graph.facebook.com/me/photos/uploaded?fields=source,created_time,id&access_token=$tk"));
-                }else {
+                } else {
                     if ($page->getId()) {
                         $stream = (file_get_contents("https://graph.facebook.com/" . $page->getId() . "/photos/uploaded?fields=source,created_time,id&access_token=$tk"));
                     } else {
@@ -742,15 +753,15 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             }
         }
         foreach ($this->clearStrings as $str) {
-            while(strpos($stream, $str) !== false){
+            while (strpos($stream, $str) !== false) {
                 $pos = strpos($stream, $str);
-                $stream = substr_replace($stream,'',$pos,12);
+                $stream = substr_replace($stream, '', $pos, 12);
             }
         }
         $stream = json_decode($stream);
 
-        foreach($stream->data as $entry) {
-            $gallery = $this->galleryRepository->findHiddenById($entry->id,$page->getUid());
+        foreach ($stream->data as $entry) {
+            $gallery = $this->galleryRepository->findHiddenById($entry->id, $page->getUid());
             if ($gallery->toArray()) {
                 $galleryalready = 1;
                 $gallery = $gallery[0];
@@ -764,9 +775,9 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
 
             $gallery->setPage($page);
 
-            if($galleryalready) {
+            if ($galleryalready) {
                 $this->galleryRepository->update($gallery);
-            }else{
+            } else {
                 $this->galleryRepository->add($gallery);
                 $clear = 1;
             }
@@ -776,17 +787,17 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             $bildurl = $gallery->getPictureUrl();
             $bildname = $entry->id . ".jpg";
 
-            if((!$galleryFolder->hasFile($bildname) && $bildname) || ($storage->getFileInFolder($bildname,$galleryFolder)->getSize() <= 0 && $galleryFolder->hasFile($bildname) && $bildname)) {
+            if ((!$galleryFolder->hasFile($bildname) && $bildname) || ($storage->getFileInFolder($bildname, $galleryFolder)->getSize() <= 0 && $galleryFolder->hasFile($bildname) && $bildname)) {
                 if ($this->exists($bildurl)) {
-                    $this->grab_image($bildurl,$this->tmp . $bildname);
-                    $movedNewFile = $storage->addFile($this->tmp . $bildname, $galleryFolder, $bildname,  \TYPO3\CMS\Core\Resource\DuplicationBehavior::REPLACE);
+                    $this->grab_image($bildurl, $this->tmp . $bildname);
+                    $movedNewFile = $storage->addFile($this->tmp . $bildname, $galleryFolder, $bildname, \TYPO3\CMS\Core\Resource\DuplicationBehavior::REPLACE);
                     $bild = $movedNewFile->getUid();
                 }
                 if ($gallery->getPicture()) {
                     $GLOBALS["TYPO3_DB"]->exec_UPDATEquery("sys_file_reference", "uid=" . $gallery->getPicture()->getUid(), array('deleted' => '1'));
                 }
-            }elseif(!$gallery->getPicture()  && $bildname){
-                $bild = $storage->getFile("/".$targetFolder->getName()."/".$subFolder->getName()."/".$galleryFolder->getName()."/".$bildname);
+            } elseif (!$gallery->getPicture() && $bildname) {
+                $bild = $storage->getFile("/" . $targetFolder->getName() . "/" . $subFolder->getName() . "/" . $galleryFolder->getName() . "/" . $bildname);
                 $bild = $bild->getUid();
             }
             if ($bild) {
@@ -811,21 +822,22 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             }
 
         }
-        if($stream->paging->next && !$short){
-            $clear += $this->galleryProcess($page,$storage,$targetFolder,$subFolder,$galleryFolder,$short,$stream->paging->next);
+        if ($stream->paging->next && !$short) {
+            $clear += $this->galleryProcess($page, $storage, $targetFolder, $subFolder, $galleryFolder, $short, $stream->paging->next);
         }
         return $clear;
     }
 
-    private function eventProcess($page,$storage,$targetFolder,$subFolder,$eventFolder,$short,$paging=""){
+    private function eventProcess($page, $storage, $targetFolder, $subFolder, $eventFolder, $short, $paging = "")
+    {
         $persistenceManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\PersistenceManager');
-        
-        if($paging){
+
+        if ($paging) {
             $stream = (file_get_contents($paging));
-        }else {
+        } else {
             $tk = $page->getToken();
-            if(!$tk){
-                $tk = $this->fbappid."|".$this->fbappsecret;
+            if (!$tk) {
+                $tk = $this->fbappid . "|" . $this->fbappsecret;
             }
             if ($short) {
                 if ($page->getId()) {
@@ -842,14 +854,14 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             }
         }
         foreach ($this->clearStrings as $str) {
-            while(strpos($stream, $str) !== false){
+            while (strpos($stream, $str) !== false) {
                 $pos = strpos($stream, $str);
-                $stream = substr_replace($stream,'',$pos,12);
+                $stream = substr_replace($stream, '', $pos, 12);
             }
         }
         $stream = json_decode($stream);
 
-        foreach($stream->data as $entry) {
+        foreach ($stream->data as $entry) {
             $event = $this->eventRepository->findHiddenById($entry->id);
             if ($event->toArray()) {
                 $eventalready = 1;
@@ -861,24 +873,24 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             $event->setId($entry->id);
             $event->setStartTime(new \DateTime($entry->start_time));
             $event->setEndTime(new \DateTime($entry->end_time));
-            if($entry->name)$event->setName($entry->name);
-            if($entry->description) {
+            if ($entry->name) $event->setName($entry->name);
+            if ($entry->description) {
                 $message = str_replace("\n", "<br/>", $entry->description);
                 $event->setDescription(str_replace("<br/><br/>", "<br/>", $message));
             }
-            if($entry->place->name)$event->setPlaceName($entry->place->name);
-            if($entry->place->location->street)$event->setPlaceStreet($entry->place->location->street);
-            if($entry->place->location->zip)$event->setPlaceZip($entry->place->location->zip);
-            if($entry->place->location->city)$event->setPlaceCity($entry->place->location->city);
-            if($entry->place->location->country)$event->setPlaceCountry($entry->place->location->country);
-            if($entry->place->location->latitude)$event->setLat($entry->place->location->latitude);
-            if($entry->place->location->longitude)$event->setLng($entry->place->location->longitude);
-            if($entry->cover->source)$event->setPictureUrl($entry->cover->source);
+            if ($entry->place->name) $event->setPlaceName($entry->place->name);
+            if ($entry->place->location->street) $event->setPlaceStreet($entry->place->location->street);
+            if ($entry->place->location->zip) $event->setPlaceZip($entry->place->location->zip);
+            if ($entry->place->location->city) $event->setPlaceCity($entry->place->location->city);
+            if ($entry->place->location->country) $event->setPlaceCountry($entry->place->location->country);
+            if ($entry->place->location->latitude) $event->setLat($entry->place->location->latitude);
+            if ($entry->place->location->longitude) $event->setLng($entry->place->location->longitude);
+            if ($entry->cover->source) $event->setPictureUrl($entry->cover->source);
             $event->setPage($page);
 
-            if($eventalready) {
+            if ($eventalready) {
                 $this->eventRepository->update($event);
-            }else{
+            } else {
                 $this->eventRepository->add($event);
                 $clear = 1;
             }
@@ -888,17 +900,17 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             $bildurl = $event->getPictureUrl();
             $bildname = $entry->id . ".jpg";
 
-            if((!$eventFolder->hasFile($bildname) && $bildname) || ($storage->getFileInFolder($bildname,$eventFolder)->getSize() <= 0 && $eventFolder->hasFile($bildname) && $bildname)) {
+            if ((!$eventFolder->hasFile($bildname) && $bildname) || ($storage->getFileInFolder($bildname, $eventFolder)->getSize() <= 0 && $eventFolder->hasFile($bildname) && $bildname)) {
                 if ($this->exists($bildurl)) {
-                    $this->grab_image($bildurl,$this->tmp . $bildname);
-                    $movedNewFile = $storage->addFile($this->tmp . $bildname, $eventFolder, $bildname,  \TYPO3\CMS\Core\Resource\DuplicationBehavior::REPLACE);
+                    $this->grab_image($bildurl, $this->tmp . $bildname);
+                    $movedNewFile = $storage->addFile($this->tmp . $bildname, $eventFolder, $bildname, \TYPO3\CMS\Core\Resource\DuplicationBehavior::REPLACE);
                     $bild = $movedNewFile->getUid();
                 }
                 if ($event->getPicture()) {
                     $GLOBALS["TYPO3_DB"]->exec_UPDATEquery("sys_file_reference", "uid=" . $event->getPicture()->getUid(), array('deleted' => '1'));
                 }
-            }elseif(!$event->getPicture()  && $bildname){
-                $bild = $storage->getFile("/".$targetFolder->getName()."/".$subFolder->getName()."/".$eventFolder->getName()."/".$bildname);
+            } elseif (!$event->getPicture() && $bildname) {
+                $bild = $storage->getFile("/" . $targetFolder->getName() . "/" . $subFolder->getName() . "/" . $eventFolder->getName() . "/" . $bildname);
                 $bild = $bild->getUid();
             }
             if ($bild) {
@@ -923,47 +935,52 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             }
 
         }
-        if($stream->paging->next && !$short){
-            $clear += $this->eventProcess($page,$storage,$targetFolder,$subFolder,$eventFolder,$short,$stream->paging->next);
+        if ($stream->paging->next && !$short) {
+            $clear += $this->eventProcess($page, $storage, $targetFolder, $subFolder, $eventFolder, $short, $stream->paging->next);
         }
         return $clear;
     }
 
-    protected function grab_image($url,$saveto){
-        $ch = curl_init ($url);
+    protected function grab_image($url, $saveto)
+    {
+        $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
-        $raw=curl_exec($ch);
-        curl_close ($ch);
-        if(file_exists($saveto)){
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+        $raw = curl_exec($ch);
+        curl_close($ch);
+        if (file_exists($saveto)) {
             unlink($saveto);
         }
-        $fp = fopen($saveto,'x');
+        $fp = fopen($saveto, 'x');
         fwrite($fp, $raw);
         fclose($fp);
     }
 
-    protected function initTSFE($id = 1, $typeNum = 0) {
+    protected function initTSFE($id = 1, $typeNum = 0)
+    {
         \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
         if (!is_object($GLOBALS['TT'])) {
             $GLOBALS['TT'] = new \TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
             $GLOBALS['TT']->start();
         }
-        $GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',
-            $GLOBALS['TYPO3_CONF_VARS'], $id, $typeNum);
+        $GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], $id, $typeNum);
+        $GLOBALS['TSFE']->sys_page = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
+        $GLOBALS['TSFE']->sys_page->init(TRUE);
         $GLOBALS['TSFE']->connectToDB();
         $GLOBALS['TSFE']->initFEuser();
         $GLOBALS['TSFE']->determineId();
         $GLOBALS['TSFE']->initTemplate();
+        $GLOBALS['TSFE']->rootLine = $GLOBALS['TSFE']->sys_page->getRootLine($id, '');
         $GLOBALS['TSFE']->getConfigArray();
-
-    }
-    protected function exists($path){
-        return (@fopen($path,"r")==true);
     }
 
-    protected function header_req( $url )
+    protected function exists($path)
+    {
+        return (@fopen($path, "r") == true);
+    }
+
+    protected function header_req($url)
     {
         $channel = curl_init();
         curl_setopt($channel, CURLOPT_URL, $url);
@@ -978,7 +995,7 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
         curl_setopt($channel, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($channel, CURLOPT_SSL_VERIFYHOST, FALSE);
         curl_exec($channel);
-        $httpCode = curl_getinfo( $channel, CURLINFO_HTTP_CODE );
+        $httpCode = curl_getinfo($channel, CURLINFO_HTTP_CODE);
         curl_close($channel);
         return $httpCode;
     }
