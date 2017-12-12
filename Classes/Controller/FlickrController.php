@@ -462,6 +462,7 @@ class FlickrController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 } else {
                     $galleryFolder = $subFolder->createFolder("gallery");
                 }
+
                 $clear += $this->galleryProcess($page, $storage, $targetFolder, $subFolder, $galleryFolder, $short);
 
             } catch (\TYPO3\CMS\Core\Error\Exception $e) {
@@ -560,7 +561,7 @@ class FlickrController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
     {
         $persistenceManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\PersistenceManager');
         $tk = $page->getToken();
-        $stream = $this->call("flickr.photosets.getList", array("user_id" => $page->getId()), $tk);
+        $stream = $this->call("flickr.photosets.getList", array("user_id" => $page->getId(), "page" => 1, "per_page" => 10), $tk);
 
         foreach ($stream['photosets']['photoset'] as $entry) {
             $gallery = $this->galleryRepository->findHiddenById($entry['id'], $page->getUid());

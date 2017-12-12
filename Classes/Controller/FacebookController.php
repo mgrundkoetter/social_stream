@@ -269,6 +269,7 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
         );
 
         $this->settings = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_socialstream_pi1.']['settings.'];
+
         $this->pageRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Socialstream\\SocialStream\\Domain\\Repository\\PageRepository');
         $this->postRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Socialstream\\SocialStream\\Domain\\Repository\\PostRepository');
         $this->galleryRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Socialstream\\SocialStream\\Domain\\Repository\\GalleryRepository');
@@ -284,7 +285,7 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             } else {
                 $targetFolder = $storage->createFolder('facebook');
             }
-            var_dump($targetFolder);
+
             try {
                 // ### get Page Data ###
                 $page = $this->pageProcess($page, $storage, $targetFolder, 1, 0);
@@ -300,6 +301,7 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
                 } else {
                     $postsFolder = $subFolder->createFolder("posts");
                 }
+
                 $clear += $this->postProcess($page, $storage, $targetFolder, $subFolder, $postsFolder, $short);
 
                 // ### get Gallery Page ###
@@ -538,6 +540,10 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
 
         if ($paging) {
             $stream = (file_get_contents($paging));
+            $tk = $page->getToken();
+            if (!$tk) {
+                $tk = $this->fbappid . "|" . $this->fbappsecret;
+            }
         } else {
             $tk = $page->getToken();
             if (!$tk) {
