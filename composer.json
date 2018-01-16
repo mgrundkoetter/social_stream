@@ -1,5 +1,5 @@
 {
-  "name": "siwaonline/social_stream",
+  "name": "siwa/social_stream",
   "type": "typo3-cms-extension",
   "description": "Social Stream - Crawls the data from a Social Media Page and saves it as news record",
   "homepage": "https://www.siwa.at",
