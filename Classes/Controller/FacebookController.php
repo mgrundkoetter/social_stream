@@ -321,7 +321,7 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
                 $clear += $this->eventProcess($page, $storage, $targetFolder, $subFolder, $eventFolder, $short);
 
             } catch (\TYPO3\CMS\Core\Error\Exception $e) {
-                echo "" . $e->getMessage();
+                $logger->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, $e->getMessage());
             }
         }
 
@@ -965,9 +965,8 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
 
     protected function initTSFE($id = 1, $typeNum = 0)
     {
-        \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
         if (!is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT'] = new \TYPO3\CMS\Core\TimeTracker\NullTimeTracker;
+            $GLOBALS['TT'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\TimeTracker\TimeTracker::class);
             $GLOBALS['TT']->start();
         }
         $GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], $id, $typeNum);
@@ -975,6 +974,7 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
         $GLOBALS['TSFE']->sys_page->init(TRUE);
         $GLOBALS['TSFE']->connectToDB();
         $GLOBALS['TSFE']->initFEuser();
+        \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
         $GLOBALS['TSFE']->determineId();
         $GLOBALS['TSFE']->initTemplate();
         $GLOBALS['TSFE']->rootLine = $GLOBALS['TSFE']->sys_page->getRootLine($id, '');

@@ -561,7 +561,7 @@ class FlickrController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
     {
         $persistenceManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\PersistenceManager');
         $tk = $page->getToken();
-        $stream = $this->call("flickr.photosets.getList", array("user_id" => $page->getId(), "page" => 1, "per_page" => 10), $tk);
+        $stream = $this->call("flickr.photosets.getList", array("user_id" => $page->getId(), "page" => 1, "per_page" => 5), $tk);
 
         foreach ($stream['photosets']['photoset'] as $entry) {
             $gallery = $this->galleryRepository->findHiddenById($entry['id'], $page->getUid());
@@ -573,13 +573,8 @@ class FlickrController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControlle
                 $galleryalready = 0;
             }
             $gallery->setId($entry['id']);
-            $photoset = $this->call("flickr.photosets.getPhotos", array("photoset_id"=>$entry['id'], "user_id" => $page->getId(), 'per_page' => 999), $tk);
-            $images = $photoset['photoset']['photo'];
-            $key = array_search(1, array_column($images, 'isprimary'));
-            if (!$key){
-                $key = 0;
-            }
-            $photo = $this->call("flickr.photos.getSizes", array("photo_id"=>$images[$key]['id'], "user_id" => $page->getId()), $tk);
+
+            $photo = $this->call("flickr.photos.getSizes", array("photo_id"=>$entry['primary'], "user_id" => $page->getId()), $tk);
 
             $photoKey = array_search("Large", array_column($photo['sizes']['size'], 'label'));
             $bildurl = $photo['sizes']['size'][$photoKey]['source'];

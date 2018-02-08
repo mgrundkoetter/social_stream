@@ -93,17 +93,24 @@ class GetSocialCommandController extends \TYPO3\CMS\Extbase\Mvc\Controller\Comma
      */
     public function getSocialCommand($rootPage = 1)
     {
+        /** @var $logger \TYPO3\CMS\Core\Log\Logger */
+        $logger = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Log\LogManager')->getLogger(__CLASS__);
+        $logger->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, "Start of Social Stream Sync");
         $fbController = new \Socialstream\SocialStream\Controller\FacebookController();
         $fbController->rootPage = $rootPage;
         $fbController->getFacebookAction();
+        $logger->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, "Finished Facebook, Start Xing");
         $xingController = new \Socialstream\SocialStream\Controller\XingController();
         $xingController->rootPage = $rootPage;
         $xingController->getXingAction();
+        $logger->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, "Finished Xing, Start LinkedIn");
         $liController = new \Socialstream\SocialStream\Controller\LinkedInController();
         $liController->rootPage = $rootPage;
         $liController->getLinkedInAction();
+        $logger->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, "Finished LinkedIn, Start Flickr");
         $flickrController = new \Socialstream\SocialStream\Controller\FlickrController();
         $flickrController->rootPage = $rootPage;
         $flickrController->getFlickrAction();
+        $logger->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, "End of Social Stream Sync");
     }
 }
