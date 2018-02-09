@@ -259,6 +259,9 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
      */
     public function getFacebookAction()
     {
+        /** @var $logger \TYPO3\CMS\Core\Log\Logger */
+        $logger = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Log\LogManager')->getLogger(__CLASS__);
+        $logger->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, "Start of Facebook Sync with Root Page ". $this->rootPage);
         $this->initTSFE($this->rootPage, 0);
         $this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
         $this->configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager');
@@ -285,7 +288,7 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
             } else {
                 $targetFolder = $storage->createFolder('facebook');
             }
-
+            $logger->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, "Start of Facebook Sync for page ". $page->getName());
             try {
                 // ### get Page Data ###
                 $page = $this->pageProcess($page, $storage, $targetFolder, 1, 0);

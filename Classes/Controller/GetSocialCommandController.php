@@ -95,7 +95,7 @@ class GetSocialCommandController extends \TYPO3\CMS\Extbase\Mvc\Controller\Comma
     {
         /** @var $logger \TYPO3\CMS\Core\Log\Logger */
         $logger = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Log\LogManager')->getLogger(__CLASS__);
-        $logger->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, "Start of Social Stream Sync");
+        $logger->log(\TYPO3\CMS\Core\Log\LogLevel::ERROR, "Start of Social Stream Sync with Root Page ". $rootPage);
         $fbController = new \Socialstream\SocialStream\Controller\FacebookController();
         $fbController->rootPage = $rootPage;
         $fbController->getFacebookAction();
