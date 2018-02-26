@@ -124,10 +124,9 @@ class FacebookController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
 
         $accesstoken = $_GET["access_token"];
         if ($accesstoken) {
-            $token = file_get_contents("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=" . $this->fbappid . "&client_secret=" . $this->fbappsecret . "&fb_exchange_token=" . $accesstoken);
-            $infos = explode("&", $token);
-            $tk = explode("=", $infos[0])[1];
-            $exp = explode("=", $infos[1])[1];
+            $token = json_decode(file_get_contents("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=" . $this->fbappid . "&client_secret=" . $this->fbappsecret . "&fb_exchange_token=" . $accesstoken));
+            $tk = $token->access_token;
+            $exp = $token->expires_in;
             if ($_GET["pageRefresh"]) {
                 $page = $this->pageRepository->searchById($_GET["pageRefresh"], $this->streamtype);
                 $page->setToken($tk);
